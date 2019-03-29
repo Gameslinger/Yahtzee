@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import yahtzee.gui.DiceCanvas;
 import yahtzee.gui.DiceDrawer;
 
 /**
@@ -32,7 +33,7 @@ public class Main extends Application {
         HBox scorerBox = new HBox();
         scorerBox.getChildren().add(scoreSelect);
         scorerBox.getChildren().add(scoreButton);
-        Canvas diceCanvas = new Canvas(300,200);
+        DiceCanvas diceCanvas = new DiceCanvas(300,200);
         VBox vbox = new VBox();
         vbox.getChildren().add(currentPlayer);
         vbox.getChildren().add(score);
