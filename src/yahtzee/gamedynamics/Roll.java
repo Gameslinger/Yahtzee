@@ -17,6 +17,7 @@ public class Roll {
     int rolls[] = new int[5];
     int rollCount[] = new int[5];
     int timesRerolled = 0;
+    boolean used[] = new boolean[5];
     public Roll() {
         fullRoll();
     }
@@ -30,35 +31,35 @@ public class Roll {
             rolls[i] = roll();
         }
         timesRerolled = 0;
-        rollCount = new int[]{0, 0, 0, 0, 0};
+        for(int i = 0; i < 5; i++){
+            rollCount[i] = 0;
+            used[i] = false;
+        }
     }
     
-    public boolean reroll(List<Integer> places) {
-        if(places.isEmpty()) return true;
-        timesRerolled++;
-        if(timesRerolled == 4) return false; //Can only roll 3 times
-        for(int pos : places){
-            if(pos > 5 || pos < 0) return false;
-            if(rollCount[pos-1]!=timesRerolled-1) return false;//Cannot reroll dice if they weren't part of past roll.
+    public void reroll(List<Integer> places) {
+//        for(int i = 0; i < 5; i++){
+//           used[i] = true;
+//        }
+        if(places.isEmpty() || timesRerolled > 3) return;
+        for(int place : places){
+            if(place > 4 || place < 0)continue;
+            //if(rollCount[place] == timesRerolled){
+                //used[place] = false;
+                rolls[place] = roll();
+                rollCount[place]++;
+           // }
         }
         
-        for (int pos : places) {
-            rolls[pos-1] = roll();
-            rollCount[pos-1]++;
+        timesRerolled++;
+        if(timesRerolled == 3){
+        for(int i = 0; i < 5; i++){
+           used[i] = true;
         }
-        return true;
+        }
     }
-    public boolean[] getRollable(){
-        boolean rollable[] = new boolean[5];
-        int currentRoll = 0;
-        for(int count : rollCount){
-            if(currentRoll < count) currentRoll = count;
-        }
-        for(int dice = 0; dice < 5; dice++){
-            if(rollCount[dice] != currentRoll) rollable[dice] = false;
-            else rollable[dice] = true;
-        }
-        return rollable;
+    public boolean[] getUsed(){
+        return used;
     }
     public int[] getRolls() {
         return rolls;

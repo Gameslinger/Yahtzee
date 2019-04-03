@@ -7,7 +7,9 @@ package yahtzee.gamedynamics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -17,33 +19,28 @@ public class Scorer {//TODO: Add 35 points for upper completion?
 
     private int score = 0;
     private int yahtzeeCount = 0;
-    //private boolean usedUpper[] = new boolean[6];
-
-    public Scorer() {
-        // for (int i = 0; i < usedUpper.length; i++) {
-        //     usedUpper[i] = false;
-        // }
+    private int upperCount = 0;
+    Map<EScore, Boolean> usedMap = new EnumMap<>(EScore.class);
+    
+    public Scorer(){
+        for(EScore score : EScore.values()){
+            usedMap.put(score, Boolean.FALSE);
+        }
     }
-
     public List<EScore> getUnused() {
-        return EScore.getUnused();
+        List<EScore> unused = new ArrayList<>();
+        for(EScore score : usedMap.keySet()){
+            if(!usedMap.get(score)) unused.add(score);
+        }
+        return unused;
     }
 
     public enum EScore {
         UPPER_1("Upper 1"), UPPER_2("Upper 2"), UPPER_3("Upper 3"), UPPER_4("Upper 4"), UPPER_5("Upper 5"), UPPER_6("Upper 6"),
         THREE_OF_KIND("Three of a Kind"), FOUR_OF_KIND("Four of a Kind"), FULL_HOUSE("Full House"), SMALL_STRAIGHT("Small Straight"),
-        LONG_STRAIGHT("Long Straight"), CHANCE("Chance");
+        LONG_STRAIGHT("Long Straight"), CHANCE("Chance"), YAHTZEE("Yahtzee");
 
-        private boolean used;
         final private String title;
-
-        public boolean isUsed() {
-            return this.used;
-        }
-
-        public void setUsed() {
-            this.used = true;
-        }
 
         public String getTitle() {
             return this.title;
@@ -51,78 +48,58 @@ public class Scorer {//TODO: Add 35 points for upper completion?
 
         private EScore(String title) {
             this.title = title;
-            this.used = false;
         }
-        public static List<EScore> getUnused(){
-            List<EScore> unused = new ArrayList<>();
-            for(EScore score : EScore.values()){
-                if(!score.isUsed()) unused.add(score);
-            }
-            return unused;
+
+        @Override
+        public String toString() {
+            return this.title;
         }
+        
     }
 
     public boolean score(EScore score, int[] rolls) {
+        if(usedMap.get(score)) return false;
+        usedMap.put(score, Boolean.TRUE);
         switch (score) {
             case UPPER_1:
-                if(EScore.UPPER_1.isUsed()) return false;
-                EScore.UPPER_1.setUsed();
                 upper(1,rolls);
                 return true;
             case UPPER_2:
-                if(EScore.UPPER_2.isUsed()) return false;
-                EScore.UPPER_2.setUsed();
                 upper(2,rolls);
                 return true;
             case UPPER_3:
-                if(EScore.UPPER_3.isUsed()) return false;
-                EScore.UPPER_3.setUsed();
                 upper(3,rolls);
                 return true;
             case UPPER_4:
-                if(EScore.UPPER_4.isUsed()) return false;
-                EScore.UPPER_4.setUsed();
                 upper(4,rolls);
                 return true;
             case UPPER_5:
-                if(EScore.UPPER_5.isUsed()) return false;
-                EScore.UPPER_5.setUsed();
                 upper(5,rolls);
                 return true;
             case UPPER_6:
-                if(EScore.UPPER_6.isUsed()) return false;
-                EScore.UPPER_6.setUsed();
                 upper(6,rolls);
                 return true;
             case THREE_OF_KIND:
-                if(EScore.THREE_OF_KIND.isUsed()) return false;
-                EScore.THREE_OF_KIND.setUsed();
                 xOfKind(3,rolls);
                 return true;
             case FOUR_OF_KIND:
-                if(EScore.FOUR_OF_KIND.isUsed()) return false;
-                EScore.FOUR_OF_KIND.setUsed();
                 xOfKind(4,rolls);
                 return true;
             case FULL_HOUSE:
-                if(EScore.FULL_HOUSE.isUsed()) return false;
-                EScore.FULL_HOUSE.setUsed();
                 fullHouse(rolls);
                 return true;
             case SMALL_STRAIGHT:
-                if(EScore.SMALL_STRAIGHT.isUsed()) return false;
-                EScore.SMALL_STRAIGHT.setUsed();
                 straight(true, rolls);
                 return true;
             case LONG_STRAIGHT:
-                if(EScore.LONG_STRAIGHT.isUsed()) return false;
-                EScore.LONG_STRAIGHT.setUsed();
                 straight(false, rolls);
                 return true;
             case CHANCE:
-                if(EScore.CHANCE.isUsed()) return false;
-                EScore.CHANCE.setUsed();
                 chance(rolls);
+                return true;
+            case YAHTZEE:
+                usedMap.put(score, Boolean.FALSE);
+                yahtzee(rolls);
                 return true;
         }
         return false;
@@ -132,11 +109,12 @@ public class Scorer {//TODO: Add 35 points for upper completion?
         return score;
     }
 
-    // public boolean[] getUsedUpper() {
-    //     return usedUpper;
-    // }
     private void addScore(int total) {
         this.score += total;
+    }
+    public int totalScore(){
+        if(upperCount >= 63) score+=35;
+        return score;
     }
 
     public void upper(int num, int rolls[]) {
@@ -150,6 +128,7 @@ public class Scorer {//TODO: Add 35 points for upper completion?
             }
         }
         //usedUpper[num - 1] = false;
+        this.upperCount+=total;
         this.addScore(total);
     }
 

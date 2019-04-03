@@ -6,34 +6,45 @@
 package yahtzee;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import yahtzee.gamedynamics.Player;
-
 /**
  *
  * @author Gabriel.Maxfield
  */
 public class Game {
-    
-    public Game(){
-        
-    }
     List<Player> players = new ArrayList<>();
+    int index = 0;
+    int turn = 1;
+    public Player nextPlayer(){
+        Player player = players.get(index);
+        index++;
+        if(index == players.size()-1) turn++;
+        if(index >= players.size()){
+            index = 0;
+        }
+    return player;
+    }
+    
+    public void add(Player player){
+        players.add(player);
+    }
+    
     public void addPlayer(String name){//TODO Sort players!!!
         players.add(new Player(name));
     }
-    public void play(){
-        for(int i = 0; i < 13; i++){
-            for(Player player : players){
-                player.doTurn();
-            }
+    
+    public int getTurn(){
+        return turn;
+    }
+
+    public Map getScores() {
+        Map<String,Integer> scoreMap = new HashMap<>();
+        for(Player player : players){
+            scoreMap.put(player.getName(), player.totalScore());
         }
-        Player highestScorer = players.get(0);
-        for(Player plr : players){//TODO: What to do in tie?
-            if(plr.getScore() > highestScorer.getScore()){
-                highestScorer = plr;
-            }
-        }
-        System.out.println(highestScorer.getName()+" wins with"+highestScorer.getScore()+"!");
+        return scoreMap;
     }
 }

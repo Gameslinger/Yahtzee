@@ -52,11 +52,11 @@ public class RollTest {
         rerolls.add(3);
         instance.reroll(rerolls);
         boolean[] exp = {true, true, true, false, false};
-        assertArrayEquals(exp, instance.getRollable());
+        assertArrayEquals(exp, instance.getUsed());
         rerolls.remove(2);
         exp[2] = false;
         instance.reroll(rerolls);
-        assertArrayEquals(exp, instance.getRollable());
+        assertArrayEquals(exp, instance.getUsed());
         
     }
 
