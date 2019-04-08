@@ -99,8 +99,7 @@ public class Scorer {//TODO: Add 35 points for upper completion?
                 return true;
             case YAHTZEE:
                 usedMap.put(score, Boolean.FALSE);
-                yahtzee(rolls);
-                return true;
+                return yahtzee(rolls);
         }
         return false;
     }
@@ -184,10 +183,10 @@ public class Scorer {//TODO: Add 35 points for upper completion?
         this.addScore(total);
     }
 
-    public void yahtzee(int rolls[]) {
+    public boolean yahtzee(int rolls[]) {
         for (int roll : rolls) {
             if (rolls[0] != roll) {
-                return;
+                return false;
             }
         }
         yahtzeeCount++;
@@ -196,6 +195,7 @@ public class Scorer {//TODO: Add 35 points for upper completion?
         } else {
             this.addScore(100);
         }
+        return true;
     }
     
     public void xOfKind(int minCount, int rolls[]){

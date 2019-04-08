@@ -5,14 +5,11 @@
  */
 package yahtzee.gui;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 import yahtzee.Game;
 import yahtzee.ScreenManager;
 import yahtzee.gamedynamics.Player;
@@ -48,14 +45,14 @@ public class GUIManager {
             public void handle(MouseEvent event) {
                 EScore score = (EScore) scoreSelect.getValue();
                 if(score!=null){
-                    player.score(score, diceCanvas.getRolls());
+                    if(player.score(score, diceCanvas.getRolls())){
                     setPlayer(game.nextPlayer());
                     if(game.getTurn() == 14){
                         screenM.endGame(game.getScores());
                     }
                 }
             }
-        
+            }
         });
         
         reroll.setOnMouseClicked(new EventHandler<MouseEvent>(){

@@ -24,7 +24,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import yahtzee.gui.DiceCanvas;
-import yahtzee.gui.DiceDrawer;
 import yahtzee.gui.GUIManager;
 
 /**

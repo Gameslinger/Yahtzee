@@ -92,8 +92,8 @@ public class Player {
         return this.scorer.getUnused();//.stream().map((x)->x.toString()).collect(Collectors.toList());
     }
 
-    public void score(EScore score,int[] rolls){
-        this.scorer.score(score, rolls);
+    public boolean score(EScore score,int[] rolls){
+        return this.scorer.score(score, rolls);
     }
     public int totalScore(){
         return this.scorer.totalScore();
